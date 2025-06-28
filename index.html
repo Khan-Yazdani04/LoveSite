@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Open the Message</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to bottom, #fde0e0, #f8bbd0);
+      font-family: 'Georgia', serif;
+      color: #4e342e;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      flex-direction: column;
+      perspective: 1000px;
+      overflow-x: hidden;
+    }
+
+    .heart-beat {
+      position: absolute;
+      width: 200px;
+      height: 200px;
+      background: radial-gradient(circle, rgba(255, 105, 135, 0.6), transparent);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+      z-index: 0;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 0.6; }
+      50% { transform: scale(1.2); opacity: 1; }
+    }
+
+    .envelope {
+      width: 360px;
+      height: 220px;
+      background: #fff;
+      position: relative;
+      transition: transform 0.3s ease-in-out;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+      z-index: 2;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+
+    .envelope::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #fce4ec;
+      clip-path: polygon(0 0, 50% 50%, 100% 0);
+      transition: transform 0.8s ease-in-out;
+      transform-origin: top center;
+      z-index: 3;
+      backface-visibility: hidden;
+    }
+
+    .envelope.open::before {
+      transform: rotateX(-160deg) translateY(-10px);
+    }
+
+    #open-btn {
+      z-index: 4;
+      padding: 12px 24px;
+      background-color: #f06292;
+      color: white;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+
+    .poem-container {
+      display: none;
+      max-width: 450px;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 1.5rem;
+      margin: 40px 20px;
+      border-radius: 16px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+      backdrop-filter: blur(5px);
+      z-index: 2;
+    }
+
+    .poem-container.show {
+      display: block;
+    }
+
+    h1 {
+      font-size: 2rem;
+      color: #880e4f;
+      margin-bottom: 1rem;
+    }
+
+    #poem-text {
+      font-size: 1.5rem;
+      line-height: 1.8;
+      white-space: pre-wrap;
+      text-align: center;
+      min-height: 300px;
+      font-family: 'Dancing Script', cursive;
+    }
+
+    .signature {
+      text-align: center;
+      margin-top: 2rem;
+      font-style: italic;
+      color: #6a1b9a;
+      opacity: 1;
+    }
+
+    .petal {
+      position: fixed;
+      top: -50px;
+      font-size: 24px;
+      animation: fall linear infinite;
+      color: #ec407a;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    @keyframes fall {
+      0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+    }
+
+    .sparkle {
+      position: fixed;
+      width: 2px;
+      height: 2px;
+      background: white;
+      border-radius: 50%;
+      animation: sparkle 3s infinite ease-in-out;
+      opacity: 0.8;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    @keyframes sparkle {
+      0%, 100% { transform: scale(1); opacity: 0.6; }
+      50% { transform: scale(2); opacity: 1; }
+    }
+
+    .heart-sparkle {
+      position: fixed;
+      font-size: 20px;
+      animation: floatUp 4s linear infinite;
+      z-index: 1;
+      pointer-events: none;
+      color: #e91e63;
+      opacity: 0.8;
+    }
+
+    @keyframes floatUp {
+      0% { transform: translateY(0) scale(1); opacity: 1; }
+      100% { transform: translateY(-100vh) scale(1.5); opacity: 0; }
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div class="heart-beat" aria-hidden="true"></div>
+
+<audio id="bg-music" loop>
+  <source src="song.mp3" type="audio/mpeg" />
+</audio>
+
+<div class="envelope" id="envelope" aria-label="Envelope with a hidden message">
+  <button id="open-btn" aria-label="Open Message">Open Message</button>
+</div>
+
+<div class="poem-container" id="poem">
+  <h1>Not So Distant...</h1>
+  <div id="poem-text">
+They call us cousins — by name, by bond,  
+But my heart beats to a different song.  
+
+From shared childhoods and family feasts,  
+I found a feeling that quietly increased.  
+
+Not just laughter or inside jokes,  
+But stolen glances and sparks evoked.  
+
+I tried to hide, I tried to ignore,  
+But love has a way of asking for more.  
+
+So here I stand, no riddles, no game,  
+Just a heart that softly whispers your name.  
+
+If love can be bold, and family still dear,  
+Then why not let destiny draw us near?  
+
+Say yes — not just as my cousin by fate...  
+But as the love I've longed to celebrate. 💍❤️
+  </div>
+  <div class="signature">— Yours, Not Just a CZN Anymore.</div>
+</div>
+
+<script>
+  window.addEventListener('DOMContentLoaded', () => {
+    const envelope = document.getElementById('envelope');
+    const poem = document.getElementById('poem');
+    const music = document.getElementById('bg-music');
+    const openBtn = document.getElementById('open-btn');
+
+    let heartInterval = setInterval(() => {
+      const heart = document.createElement("div");
+      heart.className = "heart-sparkle";
+      heart.textContent = "❤️";
+      heart.style.left = Math.random() * 100 + "vw";
+      heart.style.bottom = "0";
+      heart.style.animationDuration = (Math.random() * 2 + 2) + "s";
+      document.body.appendChild(heart);
+      setTimeout(() => heart.remove(), 5000);
+    }, 300);
+
+    openBtn.addEventListener('click', () => {
+      envelope.classList.add('open');
+
+      setTimeout(() => {
+        envelope.style.display = 'none';
+        poem.classList.add('show');
+
+        music.play().catch(() => {
+          document.addEventListener("click", () => music.play(), { once: true });
+        });
+
+        clearInterval(heartInterval);
+
+        setInterval(() => {
+          const petal = document.createElement("div");
+          petal.className = "petal";
+          petal.style.left = Math.random() * 100 + "vw";
+          petal.style.animationDuration = Math.random() * 5 + 5 + "s";
+          petal.textContent = "🌸";
+          document.body.appendChild(petal);
+          setTimeout(() => petal.remove(), 12000);
+        }, 300);
+
+        setInterval(() => {
+          const sparkle = document.createElement("div");
+          sparkle.className = "sparkle";
+          sparkle.style.top = Math.random() * window.innerHeight + "px";
+          sparkle.style.left = Math.random() * window.innerWidth + "px";
+          sparkle.style.animationDuration = Math.random() * 2 + 2 + "s";
+          document.body.appendChild(sparkle);
+          setTimeout(() => sparkle.remove(), 5000);
+        }, 150);
+      }, 1000);
+    });
+  });
+</script>
+
+</body>
+</html>
